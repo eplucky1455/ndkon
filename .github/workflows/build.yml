@@ -1,0 +1,31 @@
+name: Build NDK
+
+on:
+  push:
+    paths:
+      - 'jni/**'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Take Code Source
+        uses: actions/checkout@v4
+
+      - name: Running ndk-build as Default Server
+        run: |
+          NDK_BIN=$(find /usr/local/lib/android/sdk/ndk -maxdepth 2 -name "ndk-build" | head -n 1)
+          $NDK_BIN NDK_PROJECT_PATH=. APP_BUILD_SCRIPT=jni/Android.mk NDK_APPLICATION_MK=jni/Application.mk
+
+      - name: Create Result .so To ZIP
+        run: |
+          zip -r output_libs.zip libs/
+
+      - name: Saved To Release Newest
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          files: output_libs.zip
