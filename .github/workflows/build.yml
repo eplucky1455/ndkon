@@ -24,7 +24,7 @@ jobs:
 
       - name: Bersihkan Cache & Build APK
         # Berhenti otomatis jika error, tanpa sisa cache lama
-        run: ./gradlew clean assembleDebug --stacktrace
+        run: ./gradlew clean assembleRelease --stacktrace
 
       - name: Siapkan File APK
         if: success()
